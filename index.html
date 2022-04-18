@@ -1,19 +1,304 @@
-<!doctype html>
-<html>
- <head>
-   <meta charset="utf-8">
-  <title>ARTest</title>
- </head>
- <body onload="loadScene()">
-  
-<script>
+<!DOCTYPE html>
+<!--
+Copyright 2019 Google LLC
 
-    function loadScene()
-    {
-        var href = "intent://arvr.google.com/scene-viewer/1.1?file=https://simakovvv.github.io/files/Test.gltf#Intent;scheme=https;package=com.google.android.googlequicksearchbox;action=android.intent.action.VIEW;S.browser_fallback_url=https://developers.google.com/ar;end;";
-        window.location.href = href;
-    }
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-</script>
-</body>
+    https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+  <meta charset="UTF-8" />
+  <meta name="google" content="notranslate" />
+  <meta http-equiv="Content-Language" content="en" />
+  <head>
+    <title>&lt;model-viewer&gt;</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+    <link rel="stylesheet" href="demo-styles.css" />
+    <!-- The following libraries and polyfills are recommended to maximize browser support -->
+    <!-- NOTE: you must adjust the paths as appropriate for your project -->
+
+    <!-- 🚨 REQUIRED: Web Components polyfill to support Edge and Firefox < 63 -->
+    <script src="https://unpkg.com/@webcomponents/webcomponentsjs@2.1.3/webcomponents-loader.js"></script>
+
+    <!-- 💁 OPTIONAL: Intersection Observer polyfill for better performance in Safari and IE11 -->
+    <script src="https://unpkg.com/intersection-observer@0.5.1/intersection-observer.js"></script>
+
+    <!-- 💁 OPTIONAL: Resize Observer polyfill improves resize behavior in non-Chrome browsers -->
+    <script src="https://unpkg.com/resize-observer-polyfill@1.5.1/dist/ResizeObserver.js"></script>
+
+    <!-- 💁 OPTIONAL: Fullscreen polyfill is required for experimental AR features in Canary -->
+    <!--<script src="https://unpkg.com/fullscreen-polyfill@1.0.2/dist/fullscreen.polyfill.js"></script>-->
+
+    <!-- 💁 OPTIONAL: Include prismatic.js for Magic Leap support -->
+    <!--<script src="https://unpkg.com/@magicleap/prismatic@0.18.2/prismatic.min.js"></script>-->
+  </head>
+  <body>
+    <model-viewer
+      skybox-image="https://cdn.glitch.global/00376ab6-1953-4492-9746-fc7942aa2747/skybox1.jpg"
+      camera-orbit="35deg 80deg 2.5m"
+      src="https://cdn.glitch.global/bad5a2ec-790b-45e3-80c8-42eda011e15a/SkillsChart.glb"
+      poster="https://cdn.glitch.global/bad5a2ec-790b-45e3-80c8-42eda011e15a/loadingScreen.png?v=1649630173422"
+      shadow-intensity="1"
+      ar
+      camera-controls
+      alt="A 3D model carousel"
+    >
+      <button slot="ar-button" id="ar-button">View in your space</button>
+
+      <div id="ar-prompt">
+        <img
+          class="pointerIcon"
+          src="https://cdn.glitch.global/bad5a2ec-790b-45e3-80c8-42eda011e15a/hand1.png"
+        />
+      </div>
+
+      <button id="ar-failure">AR is not tracking!</button>
+
+      <div class="slider">
+        <div class="slides">
+          <button
+            class="slide selected"
+            onclick="switchSrc(this, 'SkillsChart')"
+            style="
+              background-image: url('https://cdn.glitch.global/bad5a2ec-790b-45e3-80c8-42eda011e15a/SkillsPreview.png');
+            "
+          ></button
+          ><button
+            class="slide"
+            onclick="switchSrc(this, 'ExpChart')"
+            style="
+              background-image: url('https://cdn.glitch.global/bad5a2ec-790b-45e3-80c8-42eda011e15a/ExpPreview.png');
+            "
+          ></button
+          ><button
+            class="slide"
+            onclick="switchSrc(this, 'AppsArch')"
+            style="
+              background-image: url('https://cdn.glitch.global/bad5a2ec-790b-45e3-80c8-42eda011e15a/ArchPreview.png');
+            "
+          ></button><button
+            class="slide"
+            onclick="switchSrc(this, 'Multithreading')"
+            style="
+              background-image: url('https://cdn.glitch.global/bad5a2ec-790b-45e3-80c8-42eda011e15a/MultithreadingPreview.png?v=1650289355900');
+            "
+          ></button>
+        </div>
+      </div>
+    </model-viewer>
+
+    <script type="module">
+      const modelViewer = document.querySelector("model-viewer");
+      window.switchSrc = (element, name) => {
+         customElements.get("model-viewer").modelCacheSize = 40;
+         modelViewer.modelCacheSize = 40;
+        const base =
+          "https://cdn.glitch.global/bad5a2ec-790b-45e3-80c8-42eda011e15a/" +
+          name;
+        modelViewer.src = base + ".glb";
+        modelViewer.poster =
+          "https://cdn.glitch.global/bad5a2ec-790b-45e3-80c8-42eda011e15a/loadingScreen.png";
+
+        const slides = document.querySelectorAll(".slide");
+        slides.forEach((element) => {
+          element.classList.remove("selected");
+        });
+        element.classList.add("selected");
+        var arTracking = modelViewer.getAttribute("ar-tracking");
+        if (arTracking === "tracking") {
+          modelViewer.skyboxImage = "";
+        }
+      };
+
+      document
+        .querySelector(".slider")
+        .addEventListener("beforexrselect", (ev) => {
+          // Keep slider interactions from affecting the XR scene.
+          ev.preventDefault();
+        });
+    </script>
+
+    <style>
+      /* This keeps child nodes hidden while the element loads */
+      :not(:defined) > * {
+        display: none;
+      }
+      .pointerIcon {
+        width: 24px;
+        hegth: 24px;
+        image-resolution: 48dpi;
+      }
+
+      model-viewer {
+        background-color: #eee;
+        overflow-x: hidden;
+        --poster-color: #eee;
+      }
+
+      #ar-button {
+        background-image: url(https://cdn.glitch.global/bad5a2ec-790b-45e3-80c8-42eda011e15a/arIcon.png);
+        background-repeat: no-repeat;
+        background-size: 20px 20px;
+        background-position: 12px 50%;
+        background-color: #fff;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        white-space: nowrap;
+        bottom: 132px;
+        padding: 0px 16px 0px 40px;
+        font-family: Roboto Regular, Helvetica Neue, sans-serif;
+        font-size: 14px;
+        color: #4285f4;
+        height: 36px;
+        line-height: 36px;
+        border-radius: 18px;
+        border: 1px solid #dadce0;
+      }
+
+      #ar-button:active {
+        background-color: #e8eaed;
+      }
+
+      #ar-button:focus {
+        outline: none;
+      }
+
+      #ar-button:focus-visible {
+        outline: 1px solid #4285f4;
+      }
+
+      @keyframes circle {
+        from {
+          transform: translateX(-50%) rotate(0deg) translateX(50px) rotate(0deg);
+        }
+        to {
+          transform: translateX(-50%) rotate(360deg) translateX(50px)
+            rotate(-360deg);
+        }
+      }
+
+      @keyframes elongate {
+        from {
+          transform: translateX(100px);
+        }
+        to {
+          transform: translateX(-100px);
+        }
+      }
+
+      model-viewer > #ar-prompt {
+        position: absolute;
+        left: 50%;
+        bottom: 175px;
+        animation: elongate 2s infinite ease-in-out alternate;
+        display: none;
+      }
+
+      model-viewer[ar-status="session-started"] > #ar-prompt {
+        display: block;
+      }
+
+      model-viewer > #ar-prompt > img {
+        animation: circle 4s linear infinite;
+      }
+
+      model-viewer > #ar-failure {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 175px;
+        display: none;
+      }
+
+      model-viewer[ar-tracking="not-tracking"] > #ar-failure {
+        display: block;
+      }
+
+      model-viewer[ar-tracking="tracking"] > #ar-failure {
+        display: block;
+      }
+
+      .slider {
+        width: 100%;
+        text-align: center;
+        overflow: hidden;
+        position: absolute;
+        bottom: 16px;
+      }
+
+      .slides {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .slide {
+        scroll-snap-align: start;
+        flex-shrink: 0;
+        width: 100px;
+        height: 100px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-color: #fff;
+        margin-left: 5px;
+        border-radius: 10px;
+        border: none;
+        display: flex;
+      }
+
+      .slide.selected {
+        border: 2px solid #4285f4;
+      }
+
+      .slide:focus {
+        outline: none;
+      }
+
+      .slide:focus-visible {
+        outline: 1px solid #4285f4;
+      }
+    </style>
+    <script>
+      // First we get the viewport height and we multiple it by 1% to get a value for a vh unit
+      let vh = window.innerHeight * 0.01;
+      // Then we set the value in the --vh custom property to the root of the document
+      document.documentElement.style.setProperty("--vh", `${vh}px`);
+
+      // We listen to the resize event
+      window.addEventListener("resize", () => {
+        // We execute the same script as before
+        let vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty("--vh", `${vh}px`);
+      });
+    </script>
+
+    <!-- 💁 Include both scripts below to support all browsers! -->
+
+    <!-- Loads <model-viewer> for modern browsers: -->
+    <script
+      type="module"
+      src="https://unpkg.com/@google/model-viewer/dist/model-viewer.js"
+    ></script>
+
+    <!-- Loads <model-viewer> for old browsers like IE11: -->
+    <script
+      nomodule
+      src="https://unpkg.com/@google/model-viewer/dist/model-viewer-legacy.js"
+    ></script>
+  </body>
 </html>
