@@ -45,10 +45,10 @@ limitations under the License.
   </head>
   <body>
     <model-viewer
-      skybox-image="https://cdn.glitch.global/00376ab6-1953-4492-9746-fc7942aa2747/skybox1.jpg"
+      skybox-image="https://simakovvv.github.io/files/skybox1.jpg"
       camera-orbit="35deg 80deg 2.5m"
-      src="https://cdn.glitch.global/bad5a2ec-790b-45e3-80c8-42eda011e15a/SkillsChart.glb"
-      poster="https://cdn.glitch.global/bad5a2ec-790b-45e3-80c8-42eda011e15a/loadingScreen.png?v=1649630173422"
+      src="https://simakovvv.github.io/files/SkillsChart.glb"
+      poster="https://simakovvv.github.io/files/loadingScreen.png"
       shadow-intensity="1"
       ar
       camera-controls
@@ -59,7 +59,7 @@ limitations under the License.
       <div id="ar-prompt">
         <img
           class="pointerIcon"
-          src="https://cdn.glitch.global/bad5a2ec-790b-45e3-80c8-42eda011e15a/hand1.png"
+          src="https://simakovvv.github.io/files/hand1.png"
         />
       </div>
 
@@ -71,27 +71,27 @@ limitations under the License.
             class="slide selected"
             onclick="switchSrc(this, 'SkillsChart')"
             style="
-              background-image: url('https://cdn.glitch.global/bad5a2ec-790b-45e3-80c8-42eda011e15a/SkillsPreview.png');
+              background-image: url('https://simakovvv.github.io/files/SkillsPreview.png');
             "
           ></button
           ><button
             class="slide"
             onclick="switchSrc(this, 'ExpChart')"
             style="
-              background-image: url('https://cdn.glitch.global/bad5a2ec-790b-45e3-80c8-42eda011e15a/ExpPreview.png');
+              background-image: url('https://simakovvv.github.io/files/ExpPreview.png');
             "
           ></button
           ><button
             class="slide"
             onclick="switchSrc(this, 'AppsArch')"
             style="
-              background-image: url('https://cdn.glitch.global/bad5a2ec-790b-45e3-80c8-42eda011e15a/ArchPreview.png');
+              background-image: url('https://simakovvv.github.io/files/ArchPreview.png');
             "
           ></button><button
             class="slide"
             onclick="switchSrc(this, 'Multithreading')"
             style="
-              background-image: url('https://cdn.glitch.global/bad5a2ec-790b-45e3-80c8-42eda011e15a/MultithreadingPreview.png?v=1650289355900');
+              background-image: url('https://simakovvv.github.io/files/MultithreadingPreview.png');
             "
           ></button>
         </div>
@@ -104,11 +104,11 @@ limitations under the License.
          customElements.get("model-viewer").modelCacheSize = 40;
          modelViewer.modelCacheSize = 40;
         const base =
-          "https://cdn.glitch.global/bad5a2ec-790b-45e3-80c8-42eda011e15a/" +
+          "https://simakovvv.github.io/files/" +
           name;
         modelViewer.src = base + ".glb";
         modelViewer.poster =
-          "https://cdn.glitch.global/bad5a2ec-790b-45e3-80c8-42eda011e15a/loadingScreen.png";
+          "https://simakovvv.github.io/files/loadingScreen.png";
 
         const slides = document.querySelectorAll(".slide");
         slides.forEach((element) => {
@@ -147,7 +147,7 @@ limitations under the License.
       }
 
       #ar-button {
-        background-image: url(https://cdn.glitch.global/bad5a2ec-790b-45e3-80c8-42eda011e15a/arIcon.png);
+        background-image: url(https://simakovvv.github.io/files/arIcon.png);
         background-repeat: no-repeat;
         background-size: 20px 20px;
         background-position: 12px 50%;
